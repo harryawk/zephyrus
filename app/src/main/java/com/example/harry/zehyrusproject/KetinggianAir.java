@@ -92,8 +92,6 @@ public class KetinggianAir extends AppCompatActivity {
                         @Override
                         public void run() {
                             addEntry();
-                            TextView textView = (TextView) findViewById(R.id.number);
-                            textView.setText(((Double) datapoint.get(datapoint.size()).getY()).toString());
                         }
                     });
                     try {
@@ -109,7 +107,9 @@ public class KetinggianAir extends AppCompatActivity {
     public void addEntry() {
         DataPoint data = new DataPoint(lastX++, RANDOM.nextDouble() * 10d);
         datapoint.add(data);
-        series.appendData(datapoint.get(datapoint.size()), true, 10);
+        series.appendData(datapoint.get(datapoint.size()-1), true, 10);
+                            TextView textView = (TextView) findViewById(R.id.number);
+                            textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString());
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
