@@ -37,6 +37,7 @@ public class KetinggianAir extends AppCompatActivity {
     private int lastX = 0;
     private static final Random RANDOM = new Random();
     private static ArrayList<DataPoint> datapoint = new ArrayList<>();
+    private Viewport viewport;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -61,13 +62,14 @@ public class KetinggianAir extends AppCompatActivity {
 //            }
 //        });
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        GraphView graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
         // Data
         series = new LineGraphSeries<DataPoint>();
         graph.addSeries(series);
 //        series.setAnimated(true);
         // Custom Viewport
-        Viewport viewport = graph.getViewport();
+//        Viewport viewport = graph.getViewport();
+        viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setXAxisBoundsManual(true);
         viewport.setMinY(0);
@@ -108,8 +110,10 @@ public class KetinggianAir extends AppCompatActivity {
         DataPoint data = new DataPoint(lastX++, RANDOM.nextDouble() * 10d);
         datapoint.add(data);
         series.appendData(datapoint.get(datapoint.size()-1), true, 10);
-                            TextView textView = (TextView) findViewById(R.id.number);
-                            textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString());
+        viewport.scrollToEnd();
+
+        TextView textView = (TextView) findViewById(R.id.number);
+        textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString());
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {

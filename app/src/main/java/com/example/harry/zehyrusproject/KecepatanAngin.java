@@ -12,9 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class KecepatanAngin extends AppCompatActivity {
+
+    private LineGraphSeries<DataPoint> series;
+    private int lastX = 0;
+    private static final Random RANDOM = new Random();
+    private static ArrayList<DataPoint> datapoint = new ArrayList<>();
+    private Viewport viewport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,22 @@ public class KecepatanAngin extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+        GraphView graph = (GraphView) findViewById(R.id.graph_kecepatan_angin);
+        // Data
+        series = new LineGraphSeries<DataPoint>();
+        graph.addSeries(series);
+//        series.setAnimated(true);
+        // Custom Viewport
+//        Viewport viewport = graph.getViewport();
+        viewport = graph.getViewport();
+        viewport.setYAxisBoundsManual(true);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setMinY(0);
+        viewport.setMaxY(10);
+        viewport.setMinX(1);
+        viewport.setMaxX(9);
+        viewport.scrollToEnd();
+        viewport.setScrollable(false);
     }
 
     @Override
@@ -50,7 +78,7 @@ public class KecepatanAngin extends AppCompatActivity {
                         }
                     });
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -60,8 +88,14 @@ public class KecepatanAngin extends AppCompatActivity {
     }
 
     public void addEntry() {
+        DataPoint data = new DataPoint(lastX++, RANDOM.nextDouble() * 10d);
+        datapoint.add(data);
+        series.appendData(datapoint.get(datapoint.size()-1), true, 10);
+        viewport.scrollToEnd();
+
         TextView textView = (TextView) findViewById(R.id.number);
-        textView.setText(((Double) new Random().nextDouble()).toString() + " " + "knot");
+        textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString() + " " + "knot");
+
     }
 
     @Override
