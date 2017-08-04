@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_menu_utama"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.harry.zehyrusproject.MenuUtama">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/resize"
+        android:id="@+id/imageView"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/curah_hujan"
+        android:id="@+id/curah_hujan"
+        android:adjustViewBounds="true"
+        android:maxWidth="100dp"
+        android:layout_marginRight="62dp"
+        android:layout_marginTop="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:onClick="switchActivity" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/kecepatan_angin"
+        android:id="@+id/kecepatan_angin"
+        android:adjustViewBounds="true"
+        android:maxWidth="100dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginTop="276dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="switchActivity" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ketinggian_air"
+        android:id="@+id/ketinggian_air"
+        android:adjustViewBounds="true"
+        android:maxWidth="100dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginTop="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="switchActivity" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arah_angin"
+        android:id="@+id/arah_angin"
+        android:adjustViewBounds="true"
+        android:maxWidth="100dp"
+        android:layout_marginRight="62dp"
+        android:layout_marginTop="276dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:onClick="switchActivity" />
+
+    <TextView
+        android:text="@string/ketinggian_air"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/ketinggian_air"
+        android:layout_alignLeft="@+id/ketinggian_air"
+        android:layout_alignStart="@+id/ketinggian_air"
+        android:layout_alignRight="@+id/ketinggian_air"
+        android:layout_alignEnd="@+id/ketinggian_air"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="@string/curah_hujan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/curah_hujan"
+        android:layout_alignLeft="@+id/curah_hujan"
+        android:layout_alignStart="@+id/curah_hujan"
+        android:layout_alignRight="@+id/curah_hujan"
+        android:layout_alignEnd="@+id/curah_hujan"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="@string/arah_angin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/arah_angin"
+        android:layout_alignLeft="@+id/arah_angin"
+        android:layout_alignStart="@+id/arah_angin"
+        android:layout_alignRight="@+id/arah_angin"
+        android:layout_alignEnd="@+id/arah_angin"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="@string/kecepatan_angin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/textView5"
+        android:layout_below="@+id/kecepatan_angin"
+        android:layout_alignLeft="@+id/kecepatan_angin"
+        android:layout_alignStart="@+id/kecepatan_angin"
+        android:layout_alignRight="@+id/kecepatan_angin"
+        android:layout_alignEnd="@+id/kecepatan_angin"
+        android:textAlignment="center" />
+
+</RelativeLayout>

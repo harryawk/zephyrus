@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Zephyrus</string>
+    <string name="title_activity_navbar_drawer">NavbarDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_arah_angin">ArahAngin</string>
+    <string name="title_activity_curah_hujan">CurahHujan</string>
+    <string name="title_activity_kecepatan_angin">KecepatanAngin</string>
+    <string name="title_activity_ketinggian_air">KetinggianAir</string>
+    <string name="ketinggian_air">Ketinggian Air</string>
+    <string name="curah_hujan">Curah Hujan</string>
+    <string name="kecepatan_angin">Kecepatan Angin</string>
+    <string name="arah_angin">Arah Angin</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="labely">Ketinggian (m)</string>
+    <string name="labelx">Pukul</string>
+</resources>
