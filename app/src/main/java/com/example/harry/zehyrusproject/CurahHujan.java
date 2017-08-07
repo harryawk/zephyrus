@@ -58,7 +58,7 @@ public class CurahHujan extends AppCompatActivity {
         viewport.setXAxisBoundsManual(true);
         viewport.setMinY(0);
         viewport.setMaxY(10);
-        viewport.setMinX(1);
+        viewport.setMinX(0);
         viewport.setMaxX(9);
         viewport.scrollToEnd();
         viewport.setScrollable(false);

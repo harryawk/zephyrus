@@ -21,12 +21,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -38,11 +42,7 @@ public class KetinggianAir extends AppCompatActivity {
     private static final Random RANDOM = new Random();
     private static ArrayList<DataPoint> datapoint = new ArrayList<>();
     private Viewport viewport;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +62,24 @@ public class KetinggianAir extends AppCompatActivity {
 //            }
 //        });
 
-        GraphView graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
+        graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
         // Data
         series = new LineGraphSeries<DataPoint>();
         graph.addSeries(series);
+
+        // Add time label formatter
+//        Calendar calendar = Calendar.getInstance();
+//
+//        Date d1 = calendar.getTime();
+//
+//        calendar.add(Calendar.DATE, 1);
+//
+//        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm")));
+//        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+//
+//        graph.getGridLabelRenderer().setHumanRounding(false);
+        // Endof init time label formatter
+
 //        series.setAnimated(true);
         // Custom Viewport
 //        Viewport viewport = graph.getViewport();
@@ -78,9 +92,7 @@ public class KetinggianAir extends AppCompatActivity {
         viewport.setMaxX(8);
         viewport.scrollToEnd();
         viewport.setScrollable(false);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        viewport.setScalable(true);
     }
 
     @Override
@@ -107,7 +119,19 @@ public class KetinggianAir extends AppCompatActivity {
     }
 
     public void addEntry() {
-        DataPoint data = new DataPoint(lastX++, RANDOM.nextDouble() * 10d);
+        // Add time label formatter
+        Calendar calendar = Calendar.getInstance();
+
+        Date d1 = calendar.getTime();
+
+        calendar.add(Calendar.DATE, 1);
+
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm:ss")));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(4);
+
+        graph.getGridLabelRenderer().setHumanRounding(false);
+
+        DataPoint data = new DataPoint(d1, RANDOM.nextDouble() * 10d);
         datapoint.add(data);
         series.appendData(datapoint.get(datapoint.size()-1), true, 10);
         viewport.scrollToEnd();
@@ -134,39 +158,13 @@ public class KetinggianAir extends AppCompatActivity {
         }
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("KetinggianAir Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 }
