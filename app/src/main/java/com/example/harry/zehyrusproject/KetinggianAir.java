@@ -44,6 +44,8 @@ public class KetinggianAir extends AppCompatActivity {
     private Viewport viewport;
     private GraphView graph;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +70,12 @@ public class KetinggianAir extends AppCompatActivity {
         graph.addSeries(series);
 
         // Add time label formatter
-//        Calendar calendar = Calendar.getInstance();
-//
-//        Date d1 = calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.SECOND, 0);
+        Date dMin = calendar.getTime();
+        calendar.add(Calendar.SECOND, 9);
+        Date dMax = calendar.getTime();
 //
 //        calendar.add(Calendar.DATE, 1);
 //
@@ -88,10 +93,10 @@ public class KetinggianAir extends AppCompatActivity {
         viewport.setXAxisBoundsManual(true);
         viewport.setMinY(0);
         viewport.setMaxY(10);
-        viewport.setMinX(0);
-        viewport.setMaxX(8);
+        viewport.setMinX(dMin.getTime());
+        viewport.setMaxX(dMax.getTime());
         viewport.scrollToEnd();
-        viewport.setScrollable(false);
+        viewport.setScrollable(true);
         viewport.setScalable(true);
     }
 
@@ -119,17 +124,20 @@ public class KetinggianAir extends AppCompatActivity {
     }
 
     public void addEntry() {
+//        Integer d1 = lastX++;
         // Add time label formatter
         Calendar calendar = Calendar.getInstance();
 
         Date d1 = calendar.getTime();
 
-        calendar.add(Calendar.DATE, 1);
+//        calendar.add(Calendar.DATE, 1);
 
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm:ss")));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(4);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(5);
 
         graph.getGridLabelRenderer().setHumanRounding(false);
+
+        // Endof add time label formatter
 
         DataPoint data = new DataPoint(d1, RANDOM.nextDouble() * 10d);
         datapoint.add(data);
