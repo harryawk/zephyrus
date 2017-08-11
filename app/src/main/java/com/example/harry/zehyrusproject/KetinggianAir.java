@@ -2,6 +2,7 @@ package com.example.harry.zehyrusproject;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -27,6 +29,13 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,8 +52,11 @@ public class KetinggianAir extends AppCompatActivity {
     private static ArrayList<DataPoint> datapoint = new ArrayList<>();
     private Viewport viewport;
     private GraphView graph;
-
-
+    private Date d1;
+    private Calendar calendar_ketinggian_air;
+    private String ketinggian_air;
+    private requestData taskRequest;
+    private boolean paused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +86,7 @@ public class KetinggianAir extends AppCompatActivity {
 
         calendar.add(Calendar.SECOND, 0);
         Date dMin = calendar.getTime();
-        calendar.add(Calendar.SECOND, 9);
+        calendar.add(Calendar.SECOND, 27);
         Date dMax = calendar.getTime();
 //
 //        calendar.add(Calendar.DATE, 1);
@@ -103,10 +115,14 @@ public class KetinggianAir extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("OnResume", "true");
+        paused = false;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
+                    if (paused)
+                        continue;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -126,9 +142,9 @@ public class KetinggianAir extends AppCompatActivity {
     public void addEntry() {
 //        Integer d1 = lastX++;
         // Add time label formatter
-        Calendar calendar = Calendar.getInstance();
+        calendar_ketinggian_air = Calendar.getInstance();
 
-        Date d1 = calendar.getTime();
+        d1 = calendar_ketinggian_air.getTime();
 
 //        calendar.add(Calendar.DATE, 1);
 
@@ -139,20 +155,130 @@ public class KetinggianAir extends AppCompatActivity {
 
         // Endof add time label formatter
 
-        DataPoint data = new DataPoint(d1, RANDOM.nextDouble() * 10d);
-        datapoint.add(data);
-        series.appendData(datapoint.get(datapoint.size()-1), true, 10);
-        viewport.scrollToEnd();
+        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+    }
 
-        TextView textView = (TextView) findViewById(R.id.number);
-        textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString());
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    private class requestData extends AsyncTask<String , Void ,String> {
+        String server_response;
 
-//        series.appendData(new DataPoint(lastX++, RANDOM.nextDouble()*10d), true, 10);
+        @Override
+        protected String doInBackground(String... strings) {
+
+            URL url;
+            HttpURLConnection urlConnection = null;
+            Log.e("Disconnecting : ", String.valueOf(isCancelled()));
+            if (!isCancelled() || !paused) {
+                try {
+                    Log.e("doInBackground", "connecting");
+                    url = new URL(strings[0]);
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    if (isCancelled()) {
+                        Log.e("doInBackground", "disconnecting");
+                        urlConnection.disconnect();
+                        return null;
+                    }
+
+                    Log.e("ResponseCode", String.valueOf(urlConnection.getResponseCode()));
+                    int responseCode = urlConnection.getResponseCode();
+
+                    if (responseCode == HttpURLConnection.HTTP_OK && !paused) {
+                        server_response = readStream(urlConnection.getInputStream());
+                        Log.v("CatalogClient", server_response);
+                        d1 = calendar_ketinggian_air.getTime();
+                        ketinggian_air = server_response;
+                    } else {
+                        Log.e("responseCode", "asdf");
+                        Log.e("responseCode == ", String.valueOf(responseCode));
+                        Log.e("paused == ", String.valueOf(paused));
+                        ketinggian_air = "";
+                        d1 = calendar_ketinggian_air.getTime();
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e("doInBackground", "ELSE");
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                return null;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            server_response = null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Log.e("Response", "" + server_response);
+
+            if (ketinggian_air != "" && ketinggian_air != null && server_response != null) {
+                Log.e("ResponseIF", ketinggian_air);
+                DataPoint data = new DataPoint(d1, Double.parseDouble(ketinggian_air));
+                datapoint.add(data);
+                series.appendData(datapoint.get(datapoint.size() - 1), true, 10);
+                viewport.scrollToEnd();
+
+                TextView textView = (TextView) findViewById(R.id.number);
+                textView.setText(((Double) datapoint.get(datapoint.size() - 1).getY()).toString());
+            } else {
+                Log.e("ResponseELSE", ketinggian_air);
+                TextView textView = (TextView) findViewById(R.id.number);
+                textView.setText("Mengambil data dari server...");
+            }
+        }
+    }
+
+// Converting InputStream to String
+
+    private String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuffer response = new StringBuffer();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response.toString();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.e("OnBackPressed", "finish");
+//        taskRequest.cancel(true);
+//        this.finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("OnPause", "true");
+        paused = true;
+        taskRequest.cancel(true);
+        this.finish();
     }
 
     @Override
