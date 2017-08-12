@@ -19,4 +19,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="labely">Ketinggian (m)</string>
     <string name="labelx">Pukul</string>
+    <string name="edukasi">Edukasi</string>
+    <string name="labely_arah_angin">Arah Angin</string>
+    <string name="labely_kecepatan_angin">Kecepatan Angin (m/s)</string>
+    <string name="labely_curah_hujan">Curah Hujan (mm<sup><small>3</small></sup>)</string>
 </resources>

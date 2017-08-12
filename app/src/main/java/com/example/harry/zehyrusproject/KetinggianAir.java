@@ -67,15 +67,6 @@ public class KetinggianAir extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
         // Data
         series = new LineGraphSeries<DataPoint>();
@@ -86,20 +77,9 @@ public class KetinggianAir extends AppCompatActivity {
 
         calendar.add(Calendar.SECOND, 0);
         Date dMin = calendar.getTime();
-        calendar.add(Calendar.SECOND, 27);
+        calendar.add(Calendar.SECOND, 30);
         Date dMax = calendar.getTime();
-//
-//        calendar.add(Calendar.DATE, 1);
-//
-//        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm")));
-//        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-//
-//        graph.getGridLabelRenderer().setHumanRounding(false);
-        // Endof init time label formatter
 
-//        series.setAnimated(true);
-        // Custom Viewport
-//        Viewport viewport = graph.getViewport();
         viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
         viewport.setXAxisBoundsManual(true);
@@ -156,6 +136,9 @@ public class KetinggianAir extends AppCompatActivity {
         // Endof add time label formatter
 
         taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+        if (paused) {
+            taskRequest.cancel(true);
+        }
     }
 
     private class requestData extends AsyncTask<String , Void ,String> {
@@ -167,7 +150,7 @@ public class KetinggianAir extends AppCompatActivity {
             URL url;
             HttpURLConnection urlConnection = null;
             Log.e("Disconnecting : ", String.valueOf(isCancelled()));
-            if (!isCancelled() || !paused) {
+            if (!isCancelled() && !paused) {
                 try {
                     Log.e("doInBackground", "connecting");
                     url = new URL(strings[0]);
@@ -201,7 +184,7 @@ public class KetinggianAir extends AppCompatActivity {
                 }
             } else {
                 Log.e("doInBackground", "ELSE");
-                if (urlConnection != null) {
+                while (urlConnection != null) {
                     urlConnection.disconnect();
                 }
                 return null;

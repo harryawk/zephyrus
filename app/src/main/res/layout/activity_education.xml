@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_education"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    style="@style/AppTheme.NoActionBar"
+    tools:context="com.example.harry.zehyrusproject.EducationActivity" >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:text="Edukasi"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:id="@+id/title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:padding="20dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc enim est, porta a felis sed, molestie egestas lorem. Fusce ornare aliquam malesuada. Ut porta, purus sit amet eleifend ultrices, mi velit rhoncus dui, id eleifend enim libero quis elit. Curabitur lectus purus, tempus id placerat et, faucibus in magna. Nam congue erat ac erat porta, nec iaculis diam dictum. Etiam egestas dui neque, vel accumsan turpis varius sodales. In facilisis ligula turpis, non efficitur massa finibus ac. Aenean nec elementum dui, quis venenatis leo. Cras finibus metus et lectus consequat rhoncus nec sed justo. Aliquam ipsum erat, tincidunt sit amet pellentesque eget, rutrum sit amet massa. Praesent vitae risus et metus finibus sodales. "
+            android:textColor="#000000"
+            android:id="@+id/contents" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:text="Edukasi"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_two"
+            android:layout_below="@+id/contents"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_two"
+            android:padding="20dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc enim est, porta a felis sed, molestie egestas lorem. Fusce ornare aliquam malesuada. Ut porta, purus sit amet eleifend ultrices, mi velit rhoncus dui, id eleifend enim libero quis elit. Curabitur lectus purus, tempus id placerat et, faucibus in magna. Nam congue erat ac erat porta, nec iaculis diam dictum. Etiam egestas dui neque, vel accumsan turpis varius sodales. In facilisis ligula turpis, non efficitur massa finibus ac. Aenean nec elementum dui, quis venenatis leo. Cras finibus metus et lectus consequat rhoncus nec sed justo. Aliquam ipsum erat, tincidunt sit amet pellentesque eget, rutrum sit amet massa. Praesent vitae risus et metus finibus sodales. "
+            android:textColor="#000000"
+            android:id="@+id/contents_two" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

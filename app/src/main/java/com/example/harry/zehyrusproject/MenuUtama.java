@@ -20,18 +20,30 @@ public class MenuUtama extends AppCompatActivity {
             public void run() {
                 try {
                     int where = view.getId();
-                    if (where == R.id.curah_hujan) {
-                        Intent homepage = new Intent(MenuUtama.this, CurahHujan.class);
-                        startActivity(homepage);
-                    } else if (where == R.id.arah_angin){
-                        Intent homepage = new Intent(MenuUtama.this, ArahAngin.class);
-                        startActivity(homepage);
-                    } else if (where == R.id.ketinggian_air) {
-                        Intent homepage = new Intent(MenuUtama.this, KetinggianAir.class);
-                        startActivity(homepage);
-                    } else if (where == R.id.kecepatan_angin) {
-                        Intent homepage = new Intent(MenuUtama.this, KecepatanAngin.class);
-                        startActivity(homepage);
+                    Intent homepage;
+                    switch (where) {
+                        case R.id.curah_hujan:
+                            homepage = new Intent(MenuUtama.this, CurahHujan.class);
+                            startActivity(homepage);
+                            break;
+                        case R.id.arah_angin:
+                            homepage = new Intent(MenuUtama.this, ArahAngin.class);
+                            startActivity(homepage);
+                            break;
+                        case R.id.ketinggian_air:
+                            homepage = new Intent(MenuUtama.this, KetinggianAir.class);
+                            startActivity(homepage);
+                            break;
+                        case R.id.kecepatan_angin:
+                            homepage = new Intent(MenuUtama.this, KecepatanAngin.class);
+                            startActivity(homepage);
+                            break;
+                        case R.id.education_activity:
+                            homepage = new Intent(MenuUtama.this, EducationActivity.class);
+                            startActivity(homepage);
+                            break;
+                        default:
+                            break;
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
