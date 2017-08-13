@@ -5,7 +5,8 @@
     android:id="@+id/activity_menu_utama"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.harry.zehyrusproject.MenuUtama">
+    tools:context="com.example.harry.zehyrusproject.MenuUtama"
+    android:gravity="center" >
 
     <ImageView
         android:layout_width="match_parent"
@@ -40,12 +41,13 @@
         android:textSize="14dp"
         android:layout_marginTop="10dp"
         android:layout_alignLeft="@+id/kelembaban_layout"
-        android:textColor="#000"/>
+        android:textColor="#000"
+        android:id="@+id/textView6" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="34dp"
         android:id="@+id/suhu_layout">
 
@@ -83,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/suhu_layout"
         android:id="@+id/tekanan_layout"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="34dp">
 
         <TextView
@@ -120,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/tekanan_layout"
         android:id="@+id/kelembaban_layout"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="34dp" >
 
         <TextView
@@ -159,11 +161,15 @@
         android:id="@+id/curah_hujan"
         android:adjustViewBounds="true"
         android:maxWidth="100dp"
-        android:layout_marginRight="62dp"
         android:layout_marginTop="100dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:onClick="switchActivity" />
+        android:layout_toRightOf="@+id/textView"
+        android:layout_alignTop="@+id/ketinggian_air"
+        android:layout_alignLeft="@+id/arah_angin"
+        android:onClick="switchActivity"
+        android:layout_above="@+id/textView2"
+        android:layout_alignRight="@+id/arah_angin"
+        android:layout_alignEnd="@+id/arah_angin" />
 
 
     <ImageView
@@ -173,11 +179,10 @@
         android:id="@+id/kecepatan_angin"
         android:adjustViewBounds="true"
         android:maxWidth="100dp"
-        android:layout_marginLeft="62dp"
-        android:layout_marginTop="246dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="switchActivity" />
+        android:layout_marginTop="23dp"
+        android:onClick="switchActivity"
+        android:layout_below="@+id/textView2"
+        android:layout_toLeftOf="@+id/education_activity" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -186,10 +191,9 @@
         android:id="@+id/ketinggian_air"
         android:adjustViewBounds="true"
         android:maxWidth="100dp"
-        android:layout_marginLeft="62dp"
         android:layout_marginTop="100dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/education_activity"
         android:onClick="switchActivity" />
 
     <ImageView
@@ -199,24 +203,31 @@
         android:id="@+id/arah_angin"
         android:adjustViewBounds="true"
         android:maxWidth="100dp"
-        android:layout_marginRight="62dp"
-        android:layout_marginTop="246dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:onClick="switchActivity" />
+        android:layout_toRightOf="@+id/textView"
+        android:onClick="switchActivity"
+        android:layout_alignTop="@+id/kecepatan_angin"
+        android:layout_alignRight="@+id/textView6"
+        android:layout_alignEnd="@+id/textView6" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/edukasi"
-        android:id="@+id/education_activity"
-        android:adjustViewBounds="true"
-        android:maxWidth="100dp"
-        android:layout_marginRight="142dp"
-        android:layout_marginTop="370dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:onClick="switchActivity" />
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/education_activity_layout">-->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/edukasi"
+            android:id="@+id/education_activity"
+            android:foregroundGravity="center"
+            android:adjustViewBounds="true"
+            android:maxWidth="100dp"
+            android:layout_marginRight="126dp"
+            android:layout_marginTop="370dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:onClick="switchActivity" />
+    <!--</RelativeLayout>-->
 
     <TextView
         android:text="@string/ketinggian_air"
@@ -276,8 +287,11 @@
         android:text="Edukasi"
         android:layout_below="@+id/education_activity"
         android:textAlignment="center"
-        android:layout_marginLeft="168dp"
         android:layout_marginTop="8dp"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_alignRight="@+id/education_activity"
+        android:layout_alignEnd="@+id/education_activity"
+        android:layout_alignLeft="@+id/education_activity"
+        android:layout_alignStart="@+id/education_activity" />
 
 </RelativeLayout>
