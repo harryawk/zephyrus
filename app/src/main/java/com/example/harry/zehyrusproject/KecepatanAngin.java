@@ -3,6 +3,7 @@ package com.example.harry.zehyrusproject;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -89,6 +90,8 @@ public class KecepatanAngin extends AppCompatActivity {
             @Override
             public void run() {
                 while (true) {
+                    if (paused)
+                        break;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -119,9 +122,10 @@ public class KecepatanAngin extends AppCompatActivity {
 
         graph.getGridLabelRenderer().setHumanRounding(false);
 
-        // Endof add time label formatter
+        // Endof 'add time label formatter
 
         taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+//        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
         if (paused) {
             taskRequest.cancel(true);
         }

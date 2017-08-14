@@ -63,7 +63,7 @@
                 android:layout_marginTop="6dp"
                 android:textSize="20dp"
                 android:textColor="#333"
-                android:text="10 ˚C"/>
+                android:text=" ˚C"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
                 android:layout_marginTop="6dp"
                 android:textSize="20dp"
                 android:textColor="#333"
-                android:text="10 Pa"/>
+                android:text=" mbar"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -137,7 +137,7 @@
                 android:layout_marginTop="6dp"
                 android:textSize="20dp"
                 android:textColor="#333"
-                android:text="10 %"/>
+                android:text=" %"/>
 
             <ImageView
                 android:layout_width="wrap_content"

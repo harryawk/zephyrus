@@ -121,6 +121,7 @@ public class CurahHujan extends AppCompatActivity {
         // Endof add time label formatter
 
         taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+//        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
         if (paused) {
             taskRequest.cancel(true);
         }
