@@ -1,6 +1,7 @@
 package com.example.harry.zehyrusproject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +60,8 @@ public class KetinggianAir extends AppCompatActivity {
     private String ketinggian_air;
     private requestData taskRequest;
     private boolean paused;
+    private SharedPreferences ketinggian_pref;
+    private SharedPreferences date_pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +75,20 @@ public class KetinggianAir extends AppCompatActivity {
         graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
         // Data
         series = new LineGraphSeries<DataPoint>();
+        ketinggian_pref = this.getSharedPreferences("ketinggian_saved", Context.MODE_PRIVATE);
+        date_pref = this.getSharedPreferences("date_saved", Context.MODE_PRIVATE);
         graph.addSeries(series);
 
         // Add time label formatter
         Calendar calendar = Calendar.getInstance();
 
-        calendar.add(Calendar.SECOND, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         Date dMin = calendar.getTime();
-        calendar.add(Calendar.SECOND, 30);
+        calendar.add(Calendar.MINUTE, 9);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         Date dMax = calendar.getTime();
 
         viewport = graph.getViewport();
@@ -110,7 +121,7 @@ public class KetinggianAir extends AppCompatActivity {
                         }
                     });
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(60000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -128,15 +139,15 @@ public class KetinggianAir extends AppCompatActivity {
 
 //        calendar.add(Calendar.DATE, 1);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm:ss")));
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm")));
         graph.getGridLabelRenderer().setNumHorizontalLabels(5);
 
         graph.getGridLabelRenderer().setHumanRounding(false);
 
         // Endof add time label formatter
 
-        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
-//        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
+//        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
         if (paused) {
             taskRequest.cancel(true);
         }
@@ -144,6 +155,7 @@ public class KetinggianAir extends AppCompatActivity {
 
     private class requestData extends AsyncTask<String , Void ,String> {
         String server_response;
+        String msg;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -168,8 +180,21 @@ public class KetinggianAir extends AppCompatActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK && !paused) {
                         server_response = readStream(urlConnection.getInputStream());
                         Log.v("CatalogClient", server_response);
-                        d1 = calendar_ketinggian_air.getTime();
-                        ketinggian_air = server_response;
+                        Log.e("Pref - 1", date_pref.getString("date_saved", ""));
+                        Log.e("Pref - 0", ketinggian_pref.getString("ketinggian_saved", ""));
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                        if (server_response.split("\\|")[1].equals(date_pref.getString("date_saved", ""))) {
+                            Log.e("Preferences", date_pref.getString("date_saved", ""));
+                            ketinggian_air = "";
+                            msg = "Menunggu data dari sungai...";
+                            return null;
+                        } else {
+                            Log.e("Preferences", date_pref.getString("date_saved", "NOT EXIST"));
+                            date_pref.edit().putString("date_saved", server_response.split("\\|")[1]).commit();
+                            ketinggian_pref.edit().putString("ketinggian_saved", server_response.split("\\|")[0]).commit();
+                            d1 = dateFormat.parse(server_response.split("\\|")[1]);
+                            ketinggian_air = server_response.split("\\|")[0];
+                        }
                     } else {
                         Log.e("responseCode", "asdf");
                         Log.e("responseCode == ", String.valueOf(responseCode));
@@ -181,6 +206,8 @@ public class KetinggianAir extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
@@ -214,7 +241,10 @@ public class KetinggianAir extends AppCompatActivity {
                 viewport.scrollToEnd();
 
                 TextView textView = (TextView) findViewById(R.id.number);
-                textView.setText(((Double) datapoint.get(datapoint.size() - 1).getY()).toString());
+                textView.setText(((Double) datapoint.get(datapoint.size() - 1).getY()).toString() + " m");
+            } else if (msg != "") {
+                TextView textView = (TextView) findViewById(R.id.number);
+                textView.setText(msg);
             } else {
                 Log.e("ResponseELSE", ketinggian_air);
                 TextView textView = (TextView) findViewById(R.id.number);

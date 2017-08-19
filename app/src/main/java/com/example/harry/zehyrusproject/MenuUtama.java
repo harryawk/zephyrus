@@ -42,13 +42,6 @@ public class MenuUtama extends AppCompatActivity {
         tekanan_pref = this.getSharedPreferences("tekanan_saved", Context.MODE_PRIVATE);
         kelembaban_pref = this.getSharedPreferences("kelembaban_saved", Context.MODE_PRIVATE);
 
-//        paused = true;
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
     }
 
     @Override
@@ -66,8 +59,8 @@ public class MenuUtama extends AppCompatActivity {
                         public void run() {
                             Log.e("__i__", String.valueOf(i[0]));
                             i[0]++;
-                                taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/home");
-//                            taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/home");
+//                                taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/home");
+                            taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/home");
                             if (paused) {
                                 taskRequest.cancel(true);
                             }
@@ -342,6 +335,6 @@ public class MenuUtama extends AppCompatActivity {
         super.onPause();
         paused = true;
         taskRequest.cancel(true);
-        this.finish();
+//        this.finish();
     }
 }

@@ -120,8 +120,8 @@ public class ArahAngin extends AppCompatActivity {
 
         // Endof add time label formatter
 
-        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/arah");
-//        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/arah");
+//        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/arah");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/arah");
         if (paused) {
             taskRequest.cancel(true);
         }

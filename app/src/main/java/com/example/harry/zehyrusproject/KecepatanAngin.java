@@ -1,5 +1,7 @@
 package com.example.harry.zehyrusproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -124,8 +126,8 @@ public class KecepatanAngin extends AppCompatActivity {
 
         // Endof 'add time label formatter
 
-        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
-//        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
+//        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/vangin");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/vangin");
         if (paused) {
             taskRequest.cancel(true);
         }
