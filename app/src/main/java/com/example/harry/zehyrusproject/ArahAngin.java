@@ -1,5 +1,7 @@
 package com.example.harry.zehyrusproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +50,8 @@ public class ArahAngin extends AppCompatActivity {
     private String arah_angin;
     private requestData taskRequest;
     private boolean paused;
+    private SharedPreferences arah_pref;
+    private SharedPreferences date_pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,8 @@ public class ArahAngin extends AppCompatActivity {
         graph = (GraphView) findViewById(R.id.graph_arah_angin);
         // Data
         series = new LineGraphSeries<DataPoint>();
+        arah_pref = this.getSharedPreferences("arah_saved", Context.MODE_PRIVATE);
+        date_pref = this.getSharedPreferences("date_saved", Context.MODE_PRIVATE);
         graph.addSeries(series);
 
         // Add time label formatter
@@ -121,7 +129,7 @@ public class ArahAngin extends AppCompatActivity {
         // Endof add time label formatter
 
 //        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/arah");
-        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/arah");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/arah");
         if (paused) {
             taskRequest.cancel(true);
         }
@@ -144,6 +152,7 @@ public class ArahAngin extends AppCompatActivity {
 
     private class requestData extends AsyncTask<String , Void ,String> {
         String server_response;
+        String msg;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -168,8 +177,23 @@ public class ArahAngin extends AppCompatActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK && !paused) {
                         server_response = readStream(urlConnection.getInputStream());
                         Log.v("CatalogClient", server_response);
-                        d1 = calendar_arah_angin.getTime();
-                        arah_angin = server_response;
+                        Log.e("Pref - 1", date_pref.getString("date_saved", ""));
+                        Log.e("Pref - 0", arah_pref.getString("arah_saved", ""));
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                        if (server_response.split("\\|")[1].equals(date_pref.getString("date_saved", ""))) {
+                            Log.e("Preferences", date_pref.getString("date_saved", ""));
+                            arah_angin = "";
+                            msg = "Menunggu data dari sungai...";
+                            return null;
+                        } else {
+                            Log.e("Preferences", date_pref.getString("date_saved", "NOT EXIST"));
+                            date_pref.edit().putString("date_saved", server_response.split("\\|")[1]).commit();
+                            arah_pref.edit().putString("arah_saved", server_response.split("\\|")[0]).commit();
+                            d1 = dateFormat.parse(server_response.split("\\|")[1]);
+                            arah_angin = server_response.split("\\|")[0];
+                        }
+//                        d1 = calendar_arah_angin.getTime();
+//                        arah_angin = server_response;
                     } else {
                         Log.e("responseCode", "asdf");
                         Log.e("responseCode == ", String.valueOf(responseCode));
@@ -181,6 +205,8 @@ public class ArahAngin extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
@@ -215,6 +241,9 @@ public class ArahAngin extends AppCompatActivity {
 
                 TextView textView = (TextView) findViewById(R.id.number);
                 textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString() + " " + (char) 0x00B0);
+            } else if (msg != "") {
+                TextView textView = (TextView) findViewById(R.id.number);
+                textView.setText(msg);
             } else {
                 Log.e("ResponseELSE", arah_angin);
                 TextView textView = (TextView) findViewById(R.id.number);

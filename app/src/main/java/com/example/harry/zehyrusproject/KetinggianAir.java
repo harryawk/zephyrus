@@ -86,8 +86,9 @@ public class KetinggianAir extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         Date dMin = calendar.getTime();
-        calendar.add(Calendar.MINUTE, 9);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.SECOND, 30);
+//        calendar.add(Calendar.MINUTE, 9);
+//        calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         Date dMax = calendar.getTime();
 
@@ -121,7 +122,7 @@ public class KetinggianAir extends AppCompatActivity {
                         }
                     });
                     try {
-                        Thread.sleep(60000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -139,7 +140,7 @@ public class KetinggianAir extends AppCompatActivity {
 
 //        calendar.add(Calendar.DATE, 1);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm")));
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("HH:mm:ss")));
         graph.getGridLabelRenderer().setNumHorizontalLabels(5);
 
         graph.getGridLabelRenderer().setHumanRounding(false);
@@ -147,7 +148,7 @@ public class KetinggianAir extends AppCompatActivity {
         // Endof add time label formatter
 
 //        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
-        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/jarak");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/jarak");
         if (paused) {
             taskRequest.cancel(true);
         }
@@ -182,7 +183,7 @@ public class KetinggianAir extends AppCompatActivity {
                         Log.v("CatalogClient", server_response);
                         Log.e("Pref - 1", date_pref.getString("date_saved", ""));
                         Log.e("Pref - 0", ketinggian_pref.getString("ketinggian_saved", ""));
-                        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                         if (server_response.split("\\|")[1].equals(date_pref.getString("date_saved", ""))) {
                             Log.e("Preferences", date_pref.getString("date_saved", ""));
                             ketinggian_air = "";

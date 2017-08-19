@@ -60,7 +60,7 @@ public class MenuUtama extends AppCompatActivity {
                             Log.e("__i__", String.valueOf(i[0]));
                             i[0]++;
 //                                taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/home");
-                            taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/home");
+                            taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/home");
                             if (paused) {
                                 taskRequest.cancel(true);
                             }

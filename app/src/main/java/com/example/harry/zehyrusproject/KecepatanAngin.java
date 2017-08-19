@@ -23,6 +23,8 @@ import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +53,8 @@ public class KecepatanAngin extends AppCompatActivity {
     private String kecepatan_angin;
     private requestData taskRequest;
     private boolean paused;
+    private SharedPreferences kecepatan_pref;
+    private SharedPreferences date_pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class KecepatanAngin extends AppCompatActivity {
         graph = (GraphView) findViewById(R.id.graph_kecepatan_angin);
         // Data
         series = new LineGraphSeries<DataPoint>();
+        kecepatan_pref = this.getSharedPreferences("kecepatan_saved", Context.MODE_PRIVATE);
+        date_pref = this.getSharedPreferences("date_saved", Context.MODE_PRIVATE);
         graph.addSeries(series);
 
         // Add time label formatter
@@ -127,7 +135,7 @@ public class KecepatanAngin extends AppCompatActivity {
         // Endof 'add time label formatter
 
 //        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/vangin");
-        taskRequest = (requestData) new requestData().execute("http://192.168.100.3:5000/vangin");
+        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/vangin");
         if (paused) {
             taskRequest.cancel(true);
         }
@@ -144,6 +152,7 @@ public class KecepatanAngin extends AppCompatActivity {
 
     private class requestData extends AsyncTask<String , Void ,String> {
         String server_response;
+        String msg;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -168,8 +177,23 @@ public class KecepatanAngin extends AppCompatActivity {
                     if (responseCode == HttpURLConnection.HTTP_OK && !paused) {
                         server_response = readStream(urlConnection.getInputStream());
                         Log.v("CatalogClient", server_response);
-                        d1 = calendar_kecepatan_angin.getTime();
-                        kecepatan_angin = server_response;
+                        Log.e("Pref - 1", date_pref.getString("date_saved", ""));
+                        Log.e("Pref - 0", kecepatan_pref.getString("kecepatan_saved", ""));
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                        if (server_response.split("\\|")[1].equals(date_pref.getString("date_saved", ""))) {
+                            Log.e("Preferences", date_pref.getString("date_saved", ""));
+                            kecepatan_angin = "";
+                            msg = "Menunggu data dari sungai...";
+                            return null;
+                        } else {
+                            Log.e("Preferences", date_pref.getString("date_saved", "NOT EXIST"));
+                            date_pref.edit().putString("date_saved", server_response.split("\\|")[1]).commit();
+                            kecepatan_pref.edit().putString("kecepatan_saved", server_response.split("\\|")[0]).commit();
+                            d1 = dateFormat.parse(server_response.split("\\|")[1]);
+                            kecepatan_angin = server_response.split("\\|")[0];
+                        }
+//                        d1 = calendar_kecepatan_angin.getTime();
+//                        kecepatan_angin = server_response;
                     } else {
                         Log.e("responseCode", "asdf");
                         Log.e("responseCode == ", String.valueOf(responseCode));
@@ -181,6 +205,8 @@ public class KecepatanAngin extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
@@ -215,6 +241,9 @@ public class KecepatanAngin extends AppCompatActivity {
 
                 TextView textView = (TextView) findViewById(R.id.number);
                 textView.setText(((Double) datapoint.get(datapoint.size()-1).getY()).toString() + " " + "m / s");
+            } else if (msg != "") {
+                TextView textView = (TextView) findViewById(R.id.number);
+                textView.setText(msg);
             } else {
                 Log.e("ResponseELSE", kecepatan_angin);
                 TextView textView = (TextView) findViewById(R.id.number);
