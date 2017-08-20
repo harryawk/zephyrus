@@ -1,5 +1,7 @@
 package com.example.harry.zehyrusproject;
 
+import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -62,6 +65,10 @@ public class KetinggianAir extends AppCompatActivity {
     private boolean paused;
     private SharedPreferences ketinggian_pref;
     private SharedPreferences date_pref;
+    private NotificationManager mNotifyMgr;
+    private int mNotificationId;
+    private Activity that;
+    private NotificationCompat.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,14 @@ public class KetinggianAir extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        that = this;
+
+        // Sets an ID for the notification
+        mNotificationId = 001;
+        // Gets an instance of the NotificationManager service
+        mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         graph = (GraphView) findViewById(R.id.graph_ketinggian_air);
         // Data
@@ -147,8 +162,8 @@ public class KetinggianAir extends AppCompatActivity {
 
         // Endof add time label formatter
 
-//        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
-        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/jarak");
+        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/jarak");
+//        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/jarak");
         if (paused) {
             taskRequest.cancel(true);
         }
@@ -236,6 +251,29 @@ public class KetinggianAir extends AppCompatActivity {
 
             if (ketinggian_air != "" && ketinggian_air != null && server_response != null) {
                 Log.e("ResponseIF", ketinggian_air);
+                String warning_message = null;
+
+                if (that != null) {
+                    if (Double.parseDouble(ketinggian_air) <= 1.3) {
+//                        warning_message = "Aman";
+                    } else if (Double.parseDouble(ketinggian_air) > 1.3 && Double.parseDouble(ketinggian_air) <= 2.0) {
+                        warning_message = "Siaga";
+                    } else { // Double.parseDouble(ketinggian_air) > 2.0
+                        warning_message = "Waspada";
+                    }
+                    if (warning_message != "" && warning_message != null) {
+                        if (mNotifyMgr != null) {
+                            mNotifyMgr.cancelAll();
+                        }
+                        mBuilder =
+                                (NotificationCompat.Builder) new NotificationCompat.Builder(that)
+                                        .setSmallIcon(R.drawable.logo_utama)
+                                        .setContentTitle("Peringatan")
+                                        .setContentText(warning_message + " : Ketinggian air mencapai " + ketinggian_air + " m");
+
+                        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                    }
+                }
                 DataPoint data = new DataPoint(d1, Double.parseDouble(ketinggian_air));
                 datapoint.add(data);
                 series.appendData(datapoint.get(datapoint.size() - 1), true, 10);

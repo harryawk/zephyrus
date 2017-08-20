@@ -1,5 +1,6 @@
 package com.example.harry.zehyrusproject;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.annotation.BoolRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +34,9 @@ public class MenuUtama extends AppCompatActivity {
     private SharedPreferences tekanan_pref;
     private SharedPreferences kelembaban_pref;
     private boolean paused;
+//    private NotificationManager mNotifyMgr;
+//    private int mNotificationId;
+//    private NotificationCompat.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +47,36 @@ public class MenuUtama extends AppCompatActivity {
         tekanan_pref = this.getSharedPreferences("tekanan_saved", Context.MODE_PRIVATE);
         kelembaban_pref = this.getSharedPreferences("kelembaban_saved", Context.MODE_PRIVATE);
 
+//        mBuilder =
+//                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.drawable.logo_utama)
+//                        .setContentTitle("My notification")
+//                        .setContentText("Hello World!");
+//
+//        // Sets an ID for the notification
+//        mNotificationId = 001;
+//        // Gets an instance of the NotificationManager service
+//        mNotifyMgr =
+//                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        // Builds the notification and issues it.
+//        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        mNotifyMgr.cancelAll();
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
         paused = false;
         final int[] i = {0};
@@ -59,8 +89,8 @@ public class MenuUtama extends AppCompatActivity {
                         public void run() {
                             Log.e("__i__", String.valueOf(i[0]));
                             i[0]++;
-//                                taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/home");
-                            taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/home");
+                                taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/home");
+//                            taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/home");
                             if (paused) {
                                 taskRequest.cancel(true);
                             }

@@ -134,8 +134,8 @@ public class KecepatanAngin extends AppCompatActivity {
 
         // Endof 'add time label formatter
 
-//        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/vangin");
-        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/vangin");
+        taskRequest = (requestData) new requestData().execute("http://zephyrus-pkm.herokuapp.com/vangin");
+//        taskRequest = (requestData) new requestData().execute("http://192.168.100.2:5000/vangin");
         if (paused) {
             taskRequest.cancel(true);
         }
